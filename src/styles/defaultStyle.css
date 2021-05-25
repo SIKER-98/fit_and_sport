@@ -1,0 +1,81 @@
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url("../img/bear-pattern.jpg");
+
+}
+
+.content {
+    max-width: 1024px;
+    width: 100%;
+    align-self: center;
+    justify-self: center;
+    flex-grow: 1;
+    background-color: floralwhite;
+    display: flex;
+}
+
+.footer {
+    display: block;
+    text-align: center;
+    font-size: 2rem;
+    background-color: chocolate;
+    line-height: 2;
+    text-transform: uppercase;
+    color: floralwhite;
+    font-weight: bold;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+p{
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    line-height: 1.5;
+}
+
+button:hover{
+    cursor:pointer;
+}
+
+ul{
+    list-style: none;
+}
+
+.container-split-2 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+}
+
+.split-2{
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    padding: 5%;
+
+    border: 1px solid #aaaaaa;
+    margin: 5%;
+    border-radius: 20%;
+}
+
+.flex-center{
+    align-self: center;
+    justify-self: center;
+}
+
+.error-message{
+    text-align: center;
+    color: red;
+    text-decoration: inherit;
+}

@@ -1,0 +1,55 @@
+.new-product-form {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.form-label {
+    margin-top: 10px;
+    font-size: 2rem;
+}
+
+.form-input, .form-textarea {
+    font-size: 1.5rem;
+    padding: 5px;
+}
+
+.form-exercises {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    list-style: none;
+
+    text-align: left;
+}
+
+.form-exercise {
+    padding: 5px 10px;
+}
+
+.form-checkbox {
+    font-size: 2rem;
+}
+
+.submit-button {
+    margin-top: 15px;
+    font-size: 2rem;
+    background-color: #71808F;
+    color: white;
+    line-height: 2;
+}
+
+.submit-button:hover{
+    background-color: #8baecd;
+}
+
+.login-form{
+    padding: 20px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

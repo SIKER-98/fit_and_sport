@@ -1,0 +1,49 @@
+.navbar {
+    line-height: 2;
+    font-size: 2rem;
+    color: white;
+    background-color: slategray;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar-logo {
+    margin-left: 50px;
+    margin-right: 50px;
+    justify-self: flex-start;
+    align-self: center;
+    cursor: pointer;
+}
+
+.navbar-menu {
+    margin: 0 50px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar-login {
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar-item {
+    display: block;
+    text-align: center;
+    margin: 0 10px;
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.navbar-item:hover {
+    background-color: #8baecd;
+}
+
+.navbar-item a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px 15px;
+}
+
