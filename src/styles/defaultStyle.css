@@ -33,18 +33,18 @@ a {
     text-decoration: none;
 }
 
-p{
+p {
     font-size: 1.5rem;
     letter-spacing: 1px;
     word-spacing: 2px;
     line-height: 1.5;
 }
 
-button:hover{
-    cursor:pointer;
+button:hover {
+    cursor: pointer;
 }
 
-ul{
+ul {
     list-style: none;
 }
 
@@ -56,7 +56,7 @@ ul{
     justify-content: center;
 }
 
-.split-2{
+.split-2 {
     flex-basis: 40%;
     display: flex;
     flex-direction: column;
@@ -69,13 +69,17 @@ ul{
     border-radius: 20%;
 }
 
-.flex-center{
+.flex-center {
     align-self: center;
     justify-self: center;
 }
 
-.error-message{
+.error-message {
     text-align: center;
     color: red;
     text-decoration: inherit;
+}
+
+.red-font-color {
+    color: red !important;
 }

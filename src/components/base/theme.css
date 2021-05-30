@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    --largeTitle: 50px;
+    --h1: 30px;
+    --h2: 22px;
+    --h3: 20px;
+    --h4: 18px;
+    --body1: 30px;
+    --body2: 20px;
+    --body3: 16px;
+    --body4: 14px;
+    --body5: 12px;
+
+    --radius:30px;
+    --padding: 10px;
+    --pading2: 12px;
+
+    --white: #ffffff;
+    --gray: #71808F;
+    --lightGray: #8baecd;
+    --green: #18F060;
+    --lightGreen: #3CF066;
+    --red: #F01E18;
+    --lightRed: #F03C4C;
+    --orange: #F0C30C;
+    --lighOrange: #F0C948
+}
+
+.font-large-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: var(--largeTitle);
+}

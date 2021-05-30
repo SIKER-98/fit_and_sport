@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 
 import '../../styles/dashboardStyle.css'
+import {deleteTrainingPlan, editTrainingPlan, getUserTrainingPlans} from "../../api";
 
 class DashboardComponent extends Component {
     constructor(props) {
@@ -16,163 +17,18 @@ class DashboardComponent extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    //TODO: do wyjebania
-    componentDidMount() {
-        this.setState({trainingPlans: this.testItems})
+    async componentDidMount() {
+        // const response = await fetchTrainingPlans()
+        const response = await getUserTrainingPlans(sessionStorage.getItem('userId'))
+
+        if (response.status === 200)
+            this.setState({trainingPlans: response.plans})
     }
 
     // przechwytywanie zmian w inputach
     handleChange(event) {
         this.setState({[event.target.name]: event.target.value});
     }
-
-
-    testItems = [
-        {
-            id: 1, planName: 'test1', description: 'description1', isEditing: false, exercises: [
-                {
-                    id: 1,
-                    exerciseName: 'excercise1',
-                    description: 'description1',
-                    series: 1,
-                    repetitions: 15,
-                    isEditing: false
-                },
-                {
-                    id: 2,
-                    exerciseName: 'excercise2',
-                    description: 'description2',
-                    series: 2,
-                    repetitions: 30,
-                    isEditing: false
-                },
-                {
-                    id: 3,
-                    exerciseName: 'excercise3',
-                    description: 'description3',
-                    series: 3,
-                    repetitions: 45,
-                    isEditing: false
-                },
-                {
-                    id: 4,
-                    exerciseName: 'excercise4',
-                    description: 'description4',
-                    series: 4,
-                    repetitions: 60,
-                    isEditing: false
-                },
-            ]
-        },
-        {
-            id: 2, planName: 'test2', description: 'description2', isEditing: false, exercises: [
-                {
-                    id: 1,
-                    exerciseName: 'excercise1',
-                    description: 'description1',
-                    series: 1,
-                    repetitions: 15,
-                    isEditing: false
-                },
-                {
-                    id: 2,
-                    exerciseName: 'excercise2',
-                    description: 'description2',
-                    series: 2,
-                    repetitions: 30,
-                    isEditing: false
-                },
-                {
-                    id: 3,
-                    exerciseName: 'excercise3',
-                    description: 'description3',
-                    series: 3,
-                    repetitions: 45,
-                    isEditing: false
-                },
-                {
-                    id: 4,
-                    exerciseName: 'excercise4',
-                    description: 'description4',
-                    series: 4,
-                    repetitions: 60,
-                    isEditing: false
-                },
-            ]
-        },
-        {
-            id: 3, planName: 'test3', description: 'description3', isEditing: false, exercises: [
-                {
-                    id: 1,
-                    exerciseName: 'excercise1',
-                    description: 'description1',
-                    series: 1,
-                    repetitions: 15,
-                    isEditing: false
-                },
-                {
-                    id: 2,
-                    exerciseName: 'excercise2',
-                    description: 'description2',
-                    series: 2,
-                    repetitions: 30,
-                    isEditing: false
-                },
-                {
-                    id: 3,
-                    exerciseName: 'excercise3',
-                    description: 'description3',
-                    series: 3,
-                    repetitions: 45,
-                    isEditing: false
-                },
-                {
-                    id: 4,
-                    exerciseName: 'excercise4',
-                    description: 'description4',
-                    series: 4,
-                    repetitions: 60,
-                    isEditing: false
-                },
-            ]
-        },
-        {
-            id: 4, planName: 'test4', description: 'description4', isEditing: false, exercises: [
-                {
-                    id: 1,
-                    exerciseName: 'excercise1',
-                    description: 'description1',
-                    series: 1,
-                    repetitions: 15,
-                    isEditing: false
-                },
-                {
-                    id: 2,
-                    exerciseName: 'excercise2',
-                    description: 'description2',
-                    series: 2,
-                    repetitions: 30,
-                    isEditing: false
-                },
-                {
-                    id: 3,
-                    exerciseName: 'excercise3',
-                    description: 'description3',
-                    series: 3,
-                    repetitions: 45,
-                    isEditing: false
-                },
-                {
-                    id: 4,
-                    exerciseName: 'excercise4',
-                    description: 'description4',
-                    series: 4,
-                    repetitions: 60,
-                    isEditing: false
-                },
-            ]
-        },
-    ]
 
     // wybranie planu treningowego
     selectItem(event, plan) {
@@ -201,32 +57,41 @@ class DashboardComponent extends Component {
     }
 
     // zakonczenie edycji planu
-    saveChange(event, p) {
+    async saveChange(event, p) {
         let plans = this.state.trainingPlans;
+
+        let updatedPlan = null
+
         plans.forEach(plan => {
             plan.isEditing = false;
 
             if (plan.id === p.id) {
                 plan.planName = this.state.editingName;
                 plan.description = this.state.editingDescription;
+                updatedPlan = plan
             }
         });
 
-        //TODO: Edycja planu
+        let response = await editTrainingPlan(updatedPlan)
 
-        this.setState({trainingPlans: plans});
+        if (response === 200)
+            this.setState({trainingPlans: plans});
     }
 
     // usuwanie planu
-    deleteItem(event, id) {
+    async deleteItem(event, id) {
         event.preventDefault()
 
         let plans = this.state.trainingPlans
-        plans = plans.filter(plan => plan.id !== id)
+        let deleted = plans.filter(plan => plan.id === id)[0]
 
-        //TODO:usuniecie planu
+        //TODO: usuwanie planu - usuwanie cwiczen
+        const status = await deleteTrainingPlan(deleted.id)
 
-        this.setState({trainingPlans: plans})
+        if (status === 200) {
+            plans = plans.filter(plan => plan.id !== id)
+            this.setState({trainingPlans: plans})
+        }
     }
 
     // generowanie wierszy tabeli

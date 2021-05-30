@@ -1,0 +1,35 @@
+.content-box {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.statistic-box {
+    margin: 20px auto;
+    width: 80%;
+}
+
+.statistic-header{
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.statistic-box span, .statistic-box label{
+    font-size: 18px;
+    margin-left:5px
+}
+
+.large-button{
+    width: 100%;
+}
+
+.statistic-table{
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+}
+
+.statistic-table tr{
+    border-bottom: 2px solid #aaa;
+}

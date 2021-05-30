@@ -1,0 +1,13 @@
+.gray-button{
+    font-size: var(--h2);
+    padding: var(--padding);
+    background: var(--gray);
+    color: var(--white);
+    transition:0.1s;
+    margin-top: var(--padding);
+    margin-bottom: var(--padding);
+}
+
+.gray-button:hover{
+    background: var(--lightGray);
+}

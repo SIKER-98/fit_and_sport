@@ -1,10 +1,20 @@
 import React, {Component} from "react";
+import {
+    addExerciseToTrainingPlan,
+    deleteExerciseFromTrainingPlan,
+    fetchExercises,
+    getPlanExercises,
+    loginUser, updateExerciseFromTrainingPlan
+} from "../../../api";
 
 class TrainingPlanComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             plan: props.location.state.plan,
+
+            exercises: [],
+            availableExercises: [],
 
             selectedExercise: 0,
             editingSeries: 0,
@@ -18,14 +28,35 @@ class TrainingPlanComponent extends Component {
         this.tableRowGenerate = this.tableRowGenerate.bind(this)
     }
 
-    testExcercises = [
-        {id: 1, exerciseName: 'exercise 1', isSelected: false},
-        {id: 2, exerciseName: 'exercise 2', isSelected: false},
-        {id: 3, exerciseName: 'exercise 3', isSelected: false},
-        {id: 4, exerciseName: 'exercise 4', isSelected: false},
-        {id: 5, exerciseName: 'exercise 5', isSelected: false},
-        {id: 6, exerciseName: 'exercise 6', isSelected: false},
-    ]
+    async componentDidMount() {
+        const plan = this.state.plan
+
+        const response = await getPlanExercises(plan.id)
+        response.exercises = response.exercises.sort(function (a, b) {
+            return a.exerciseId - b.exerciseId
+        })
+
+        if (response.status === 200) {
+            this.setState({exercises: response.exercises})
+        }
+
+
+        const exercises = await fetchExercises()
+        if (exercises.status === 200) {
+            exercises.exercises = exercises.exercises.filter(this.comparer(response.exercises))
+
+            this.setState({availableExercises: exercises.exercises})
+        }
+    }
+
+    // funkcja filtrujaca
+    comparer(otherArray) {
+        return function (current) {
+            return otherArray.filter(function (other) {
+                return other.exerciseId === current.id
+            }).length === 0;
+        }
+    }
 
     // przechwytywanie zmian w inputach
     handleChange(event) {
@@ -36,7 +67,7 @@ class TrainingPlanComponent extends Component {
     updateItem(event, selectedExercises) {
         event.preventDefault();
 
-        let exercises = this.state.plan.exercises;
+        let exercises = this.state.exercises;
         exercises.forEach(exercise => {
             exercise.isEditing = exercise.id === selectedExercises.id;
         });
@@ -44,44 +75,58 @@ class TrainingPlanComponent extends Component {
         this.setState({
             editingSeries: selectedExercises.series,
             editingRepetitions: selectedExercises.repetitions,
-            trainingPlans: exercises
+            exercises: exercises
         });
     }
 
     // zakonczenie edycji cwiczenia
-    saveChange(event, selectedExercises) {
-        let plan = this.state.plan;
-        plan.exercises.forEach(exercise => {
-            exercise.isEditing = false;
+    async saveChange(event, selectedExercises) {
+        let exercises = this.state.exercises;
+        const exerciseId = selectedExercises.planExerciseId
 
-            //TODO: Update training plan item
+        const status = await updateExerciseFromTrainingPlan(exerciseId, this.state.editingRepetitions, this.state.editingSeries)
 
-            if (exercise.id === selectedExercises.id) {
-                exercise.series = this.state.editingSeries;
-                exercise.repetitions = this.state.editingRepetitions;
-            }
-        });
+        if (status === 200) {
+            exercises.forEach(exercise => {
+                exercise.isEditing = false;
 
+                //TODO: Update training plan item
 
-        this.setState({plan: plan});
+                if (exercise.planExerciseId === selectedExercises.planExerciseId) {
+                    exercise.series = this.state.editingSeries;
+                    exercise.repetitions = this.state.editingRepetitions;
+                }
+            })
+
+            this.setState({exercises: exercises});
+        }
     }
 
-    deleteItem(event, id) {
-        let plan = this.state.plan;
-        plan.exercises = plan.exercises.filter(exercise => exercise.id !== id)
+    async deleteItem(event, exercise) {
+        const id = exercise.planExerciseId
+        console.log(id)
+        console.log(this.state.exercises)
 
-        //TODO: delete training plan item
+        const status = await deleteExerciseFromTrainingPlan(id)
 
-        this.setState({plan: plan});
+        console.log(this.state.exercises)
+        //TODO: usuwanie cwiczenia
+
+        if (status === 200) {
+            let exercises = this.state.exercises;
+            exercises = exercises.filter(exercise => exercise.planExerciseId !== id)
+
+            this.setState({exercises: exercises});
+        }
     }
 
 
     // generowanie wierszy tabeli
     tableRowGenerate() {
-        return this.state.plan.exercises.map(exercise => {
+        return this.state.exercises.map(exercise => {
                 return (
-                    <tr key={exercise.id}>
-                        <td>{exercise.id}</td>
+                    <tr key={exercise.exerciseId}>
+                        <td>{exercise.exerciseId}</td>
                         {!exercise.isEditing &&
                         <>
                             <td>{exercise.exerciseName}</td>
@@ -95,7 +140,7 @@ class TrainingPlanComponent extends Component {
                                     Update
                                 </button>
                                 <button className={'action-button button-red'}
-                                        onClick={(event) => this.deleteItem(event, exercise.id)}>
+                                        onClick={(event) => this.deleteItem(event, exercise)}>
                                     Delete
                                 </button>
                             </td>
@@ -131,7 +176,7 @@ class TrainingPlanComponent extends Component {
                                     Save
                                 </button>
                                 <button className={'action-button button-red'}
-                                        onClick={(event) => this.deleteItem(event, exercise.id)}>
+                                        onClick={(event) => this.deleteItem(event, exercise)}>
                                     Delete
                                 </button>
                             </td>
@@ -150,23 +195,34 @@ class TrainingPlanComponent extends Component {
         this.setState({selectedExercise: event.target.value})
     }
 
-    addExerciseToPlan() {
+    async addExerciseToPlan() {
         let plan = this.state.plan
 
+        if (this.state.selectedExercise !== 0) {
+            const request = await addExerciseToTrainingPlan(plan.id, this.state.selectedExercise)
 
-        if (this.state.selectedExercise * 1 !== 0) {
-            const exercise = this.testExcercises.filter(element => element.id === this.state.selectedExercise * 1
-            )
-            let newExercises = exercise[0]
-            newExercises.description = 'new Element'
-            newExercises.series = 0
-            newExercises.repetitions = 0
+            if (request.status === 200) {
+                let options = this.state.availableExercises
+                let exercises = this.state.exercises
 
+                // nowe cwiczenie
+                // let newExercise = options.filter(option => option.id === this.state.selectedExercise * 1)[0]
+                // newExercise.exerciseId = newExercise.id
+                let newExercise = request.data
 
-            plan.exercises.push(newExercises)
+                // lista bez tego cwiczenia
+                options = options.filter(option => option.id !== this.state.selectedExercise * 1)
 
+                exercises.push(newExercise)
+                exercises = exercises.sort(function (a, b) {
+                    return a.exerciseId * 1 - b.exerciseId * 1
+                })
 
-            this.setState({plan: plan})
+                this.setState({
+                    exercises: exercises,
+                    availableExercises: options
+                })
+            }
         }
 
     }
@@ -283,7 +339,7 @@ class TrainingPlanComponent extends Component {
                                     this.selectExercise(event)}
                         >
                             <option value={0}>-Empty-</option>
-                            {this.testExcercises.map(item => (
+                            {this.state.availableExercises.map(item => (
                                 <option value={item.id}
                                         key={item.id}
                                 >
@@ -293,32 +349,28 @@ class TrainingPlanComponent extends Component {
                         </select>
                     </div>
 
-                    <button className={'submit-button'}
-                            onClick={() =>
-                                this.setState({newStatistic: true})}
-                    >
-                        Add new
-                        Statistic
-                    </button>
-                    <button className={'submit-button'}
-                            onClick={() =>
-                                this.setState({showStatistics: true})}
-                    >
-                        Show
-                        statistic
-                    </button>
+                    {/*<button className={'submit-button'}*/}
+                    {/*        onClick={() =>*/}
+                    {/*            this.setState({newStatistic: true})}*/}
+                    {/*>*/}
+                    {/*    Add new*/}
+                    {/*    Statistic*/}
+                    {/*</button>*/}
+                    {/*<button className={'submit-button'}*/}
+                    {/*        onClick={() =>*/}
+                    {/*            this.setState({showStatistics: true})}*/}
+                    {/*>*/}
+                    {/*    Show*/}
+                    {/*    statistic*/}
+                    {/*</button>*/}
 
-                    {this.addNewStatistic()}
-                    {this.showStatistics()}
+                    {/*{this.addNewStatistic()}*/}
+                    {/*{this.showStatistics()}*/}
                 </div>
             </>
         )
 
     }
-}
-
-const TrainingPlanRow = (props) => {
-
 }
 
 export default TrainingPlanComponent;

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {registerUser} from "./RegisterApi";
+import {registerUser} from "../../api/index";
+import GrayButton from "../base/buttons/GrayButton";
 
 class RegisterComponent extends Component {
     constructor(props) {
@@ -40,7 +41,6 @@ class RegisterComponent extends Component {
             return
         }
 
-        //TODO: Rejestracja
         let response = await registerUser(this.state.nickname, this.state.password1, this.state.height)
 
         if (response.status !== 200) {
@@ -92,7 +92,7 @@ class RegisterComponent extends Component {
                         >
                             Password:
                         </label>
-                        <input type={'text'}
+                        <input type={'password'}
                                name={'password1'}
                                id={'password1'}
                                className={'form-input'}
@@ -105,7 +105,7 @@ class RegisterComponent extends Component {
                         >
                             Confirmed Password:
                         </label>
-                        <input type={'text'}
+                        <input type={'password'}
                                name={'password2'}
                                id={'password2'}
                                className={'form-input'}
@@ -126,10 +126,13 @@ class RegisterComponent extends Component {
                                autoComplete={'off'}
                                onChange={this.handleChange}
                         />
-                        <button type={'submit'}
-                                className={'submit-button'}>
-                            Register
-                        </button>
+                        <GrayButton type={'submit'}
+                                    text={'Register'}
+                        />
+                        {/*<button*/}
+                        {/*    className={'submit-button'}>*/}
+                        {/*    Register*/}
+                        {/*</button>*/}
                     </form>
                 </div>
             </div>

@@ -10,6 +10,7 @@ import AuthenticatedRoute from "./authorisation/AuthenticatedRoute";
 
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import TrainingPlanComponent from "./components/trainingPlan/trainingPlanExcercise/TrainingPlanComponent";
+import RunningStatisticComponent from "./components/runing/RunningStatisticComponent";
 
 
 
@@ -26,8 +27,8 @@ function App() {
                         <Route path={'/home'} component={HomeComponent}/>
                         <AuthenticatedRoute path={'/dashboard'} component={DashboardComponent}/>
                         <AuthenticatedRoute path={'/create'} component={CreatePlanComponent}/>
-                        <Route path={'/plan'} component={TrainingPlanComponent}/>
-                        {/*<Route path={'/calendar'} component={CalendarComponent}/>*/}
+                        <AuthenticatedRoute path={'/plan'} component={TrainingPlanComponent}/>
+                        <AuthenticatedRoute path={'/run'} component={RunningStatisticComponent}/>
                         <Route path={'/login'} component={LoginComponent}/>
                         <Route path={'/register'} component={RegisterComponent}/>
                     </Switch>

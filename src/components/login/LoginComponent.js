@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import AuthenticationService from '../../authorisation/AuthenticationService'
-import {loginUser} from "./LoginApi";
+import {loginUser} from "../../api/index";
+import GrayButton from "../base/buttons/GrayButton";
 
 class LoginComponent extends Component {
     constructor(props) {
@@ -81,10 +82,13 @@ class LoginComponent extends Component {
                                    onChange={this.handleChange}
                             />
 
-                            <button className={'submit-button'}
-                                    onClick={(event) => this.login(event)}>
-                                Login
-                            </button>
+                            {/*<button className={'submit-button'}*/}
+                            {/*        >*/}
+                            {/*    Login*/}
+                            {/*</button>*/}
+                            <GrayButton txt={'Login'}
+                                        onClick={(event) => this.login(event)}
+                            />
                         </form>
                     </div>
 
@@ -94,10 +98,9 @@ class LoginComponent extends Component {
                             possibility
                             to use works of professionals. You are only one click away from that :D
                         </p>
-                        <button className={'submit-button'}
-                                onClick={(event) => this.register(event)}>
-                            Register
-                        </button>
+                        <GrayButton onClick={(event) => this.register(event)}
+                                    text={'Register'}
+                        />
                     </div>
                 </div>
             </>

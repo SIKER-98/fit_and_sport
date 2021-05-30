@@ -19,14 +19,14 @@ class NavigationComponent extends Component {
                     <li className="navbar-item">
                         <Link to={'/home'}>Home</Link>
                     </li>
-                    {isUserLoggedIn && <li className="navbar-item">
+                    <li className="navbar-item">
                         <Link to={'/dashboard'}>Trainings plans</Link>
-                    </li>}
+                    </li>
                     {isUserLoggedIn && <li className="navbar-item">
                         <Link to={'/create'}>Add new Training plan</Link>
                     </li>}
                     <li className="navbar-item">
-                        <Link to={'/calendar'}>Running results</Link>
+                        <Link to={'/run'}>Running results</Link>
                     </li>
                 </ul>
 
